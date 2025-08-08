@@ -212,19 +212,22 @@
 <div class="card">
   <form id="firmaForm" novalidate>
     <label for="nombre">Nombre completo</label>
-    <input type="text" id="nombre" placeholder="Ej: Ing. Eyner López" />
+    <input type="text" id="nombre" placeholder="Ej: Lic. Juan Perez" />
 
     <!-- Cargos -->
     <div id="cargosContainer">
       <div class="cargo-pair">
         <div style="flex:1;">
           <label>Cargo (Español)</label>
-          <input type="text" name="cargoEs[]" placeholder="Ej: Responsable de Infraestructura TI"/>
+          <input type="text" name="cargoEs[]" placeholder="Ej: Descripción del Cargo"/>
         </div>
         <div style="flex:1;">
-          <label>Cargo (Alemán) <small>(opcional)</small></label>
-          <input type="text" name="cargoDe[]" placeholder="Ej: Verantwortlicher für IT-Infrastruktur" />
-        </div>
+  <label>
+    Cargo (Alemán) <a href="https://www.deepl.com/es/translator" target="_blank" rel="noopener noreferrer">(Traducir)</a>
+  </label>
+  <input type="text" name="cargoDe[]" placeholder="Ej: Descripción del Cargo en Aleman" />
+</div>
+
         <button type="button" class="btn-remove" onclick="removerCargo(this)" style="display:none;">−</button>
       </div>
     </div>
@@ -234,7 +237,7 @@
     <label style="margin-top: 25px;">Correos electrónicos</label>
     <div id="correosContainer">
       <div class="correo-item">
-        <input type="email" name="correo[]" placeholder="ejemplo@dsm.edu.ni" required />
+        <input type="email" name="correo[]" placeholder="juan.perez@dsm.edu.ni" required />
         <button type="button" class="btn-remove" onclick="removerCorreo(this)" style="display:none;">−</button>
       </div>
     </div>
@@ -266,11 +269,23 @@
   <h2>HTML para copiar:</h2>
   <textarea id="firmaHTML" readonly placeholder="Aquí aparecerá el código HTML de la firma generada."></textarea>
 
-  <div class="clearfix" style="margin-top: 10px;">
-    <button class="clear-button" onclick="borrarTodo()">🗑 Borrar todo</button>
-    <button class="copy-button" onclick="copiarFirmaConFormato()">📋 Copiar firma</button>
-  </div>
+  <div class="clearfix" style="margin-top: 10px; display: flex; justify-content: center; gap: 15px; align-items: center;">
+
+  <button class="clear-button" onclick="borrarTodo()">🗑 Borrar todo</button>
+  
+  <a href="https://drive.google.com/file/d/1P8YEcnjyFRiTRV5K2ccT3RkLEIGSPpQ7/view?usp=sharing" target="_blank" 
+     style="background-color: #007bff; color: white; padding: 10px 22px; 
+            border-radius: 5px; font-weight: 700; cursor: pointer; 
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center; 
+            font-size: 15px; height: 38px; line-height: 1; box-sizing: border-box;">
+    📄 Manual Firma
+  </a>
+  
+  <button class="copy-button" onclick="copiarFirmaConFormato()">📋 Copiar firma</button>
+
 </div>
+
+
 
 <footer>
   <p>
@@ -320,11 +335,11 @@ function agregarCargo() {
   nuevo.innerHTML = `
     <div style="flex: 1;">
       <label>Cargo (Español)</label>
-      <input type="text" name="cargoEs[]" placeholder="Ej: Responsable de Infraestructura TI" />
+      <input type="text" name="cargoEs[]" placeholder="Ej: Descripción del Cargo" />
     </div>
     <div style="flex: 1;">
-      <label>Cargo (Alemán) <small>(opcional)</small></label>
-      <input type="text" name="cargoDe[]" placeholder="Ej: Verantwortlicher für IT-Infrastruktur" />
+      <label>Cargo (Alemán)</label>
+      <input type="text" name="cargoDe[]" placeholder="Ej: Descripción del Cargo en Aleman" />
     </div>
     <button type="button" class="btn-remove" onclick="removerCargo(this)">−</button>
   `;
@@ -364,7 +379,7 @@ function agregarCargo() {
   nuevo.className = 'correo-item';
   nuevo.style = 'display: flex; gap: 10px; margin-top: 10px; align-items: center;';
   nuevo.innerHTML = `
-    <input type="email" name="correo[]" placeholder="ejemplo@dsm.edu.ni" required />
+    <input type="email" name="correo[]" placeholder="juan.perez@dsm.edu.ni" required />
     <button type="button" class="btn-remove" onclick="removerCorreo(this)">−</button>
   `;
   container.appendChild(nuevo);
@@ -461,9 +476,10 @@ if (celularRaw) {
   telefonoLinea += `<strong>Cel.:</strong> 📱 
     <a href="https://wa.me/505${celularRaw}" target="_blank" style="color: #006699; text-decoration: none; display: inline-flex; align-items: center;">
       ${celularFormateado}
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="16" height="16" style="margin-left: 6px;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="16" height="16" style="margin-left: 6px; vertical-align: middle;">
     </a><br>`;
 }
+
 
 
 
@@ -486,12 +502,13 @@ const correosHtml = correos
 </div>
 
 
-  </div>
-  <br>
-        <p style="color:#009900; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.2em; margin: 0;">
-          Antes de imprimir este mensaje, piense en su responsabilidad con el medio ambiente / Bitte denken Sie über Ihre Verantwortung gegenüber der Umwelt nach, bevor Sie diese Email ausdrucken.
-        </p>
-      </div>
+ </div>
+<br>
+<p style="color:#009900; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.2em; margin: 0;">
+  <span style="margin-right: 6px;">🌳</span>Antes de imprimir este mensaje, piense en su responsabilidad con el medio ambiente / Bitte denken Sie über Ihre Verantwortung gegenüber der Umwelt nach, bevor Sie diese Email ausdrucken.
+</p>
+</div>
+
     `;
 
     document.getElementById("vistaPrevia").innerHTML = firmaWeb.trim();
