@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Generador de Firma Institucional</title>
+<style>
+  :root {
+    --color-principal: #000000;
+    --color-secundario: #006699;
+    --color-verde: #2e7d32;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 30px 20px 100px;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  h1 {
+    text-align: center;
+    color: var(--color-principal);
+    margin-bottom: 30px;
+  }
+  .card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px 25px;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #333;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+  }
+  input.contenido, select.contenido {
+    background-color: #d4edda;
+  }
+  button {
+    margin-top: 20px;
+    padding: 10px 22px;
+    background-color: var(--color-secundario);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: var(--color-principal);
+  }
+  textarea {
+    width: 100%;
+    height: 240px;
+    padding: 15px;
+    font-family: monospace;
+    background-color: #fdfdfd;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    resize: none;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+  #vistaPrevia {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: white;
+    margin-top: 20px;
+    min-height: 130px;
+    color: #666;
+    font-style: normal;
+    font-size: 14px;
+  }
+  .firma-container {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #333;
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .firma-container strong.nombre {
+    font-size: 15px;
+    color: var(--color-principal);
+  }
+  .firma-container strong.institucion {
+    font-weight: 700;
+    display: block;
+    margin: 10px 0 10px;
+  }
+  .copy-button, .clear-button {
+    margin-top: 10px;
+    font-size: 18px;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    border: none;
+  }
+  .copy-button {
+    background-color: #4CAF50;
+    float: right;
+  }
+  .copy-button:hover {
+    background-color: #388E3C;
+  }
+  .clear-button {
+    background-color: #e53935;
+    float: left;
+  }
+  .clear-button:hover {
+    background-color: #b71c1c;
+  }
+  .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  #agregarCargoBtn, #agregarCorreoBtn {
+    margin-top: 10px;
+    font-size: 22px;
+    padding: 6px 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: var(--color-secundario);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  #agregarCargoBtn:hover, #agregarCorreoBtn:hover {
+    background-color: var(--color-principal);
+  }
+  .btn-remove {
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-left: 10px;
+    padding: 0 10px;
+    height: 38px;
+    transition: background-color 0.3s ease;
+  }
+  .btn-remove:hover {
+    background-color: #b71c1c;
+  }
+  /* Contenedor flex para cargos y correos con botón de eliminar */
+  .cargo-pair, .correo-item {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: flex-start;
+  }
+  /* Footer fijo y centrado */
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #003366;
+    color: white;
+    text-align: center;
+    padding: 10px 0 14px;
+    font-size: 13px;
+    box-sizing: border-box;
+    user-select: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 1000;
+  }
+  footer a {
+    color: #a3c1e3;
+    text-decoration: none;
+  }
+  footer a:hover {
+    text-decoration: underline;
+  }
+  footer img {
+    vertical-align: middle;
+    margin-right: 6px;
+    width: 18px;
+    height: 12px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Generador de Firma Institucional</h1>
+
+<div class="card">
+  <form id="firmaForm" novalidate>
+    <label for="nombre">Nombre completo</label>
+    <input type="text" id="nombre" placeholder="Ej: Ing. Eyner López" />
+
+    <!-- Cargos -->
+    <div id="cargosContainer">
+      <div class="cargo-pair">
+        <div style="flex:1;">
+          <label>Cargo (Español)</label>
+          <input type="text" name="cargoEs[]" placeholder="Ej: Responsable de Infraestructura TI"/>
+        </div>
+        <div style="flex:1;">
+          <label>Cargo (Alemán) <small>(opcional)</small></label>
+          <input type="text" name="cargoDe[]" placeholder="Ej: Verantwortlicher für IT-Infrastruktur" />
+        </div>
+        <button type="button" class="btn-remove" onclick="removerCargo(this)" style="display:none;">−</button>
+      </div>
+    </div>
+    <button type="button" id="agregarCargoBtn" onclick="agregarCargo()">+</button>
+
+    <!-- Correos -->
+    <label style="margin-top: 25px;">Correos electrónicos</label>
+    <div id="correosContainer">
+      <div class="correo-item">
+        <input type="email" name="correo[]" placeholder="ejemplo@dsm.edu.ni" required />
+        <button type="button" class="btn-remove" onclick="removerCorreo(this)" style="display:none;">−</button>
+      </div>
+    </div>
+    <button type="button" id="agregarCorreoBtn" onclick="agregarCorreo()">+</button>
+
+    <label for="extension">Extensión</label>
+    <input type="number" id="extension" placeholder="Ej: 17" min="0" />
+
+    <label for="celular">Celular <small>(opcional, solo números, max 8 dígitos)</small></label>
+    <input type="text" id="celular" placeholder="Ej: 88880000" maxlength="8" pattern="\d*" />
+
+    <label for="tipoFirma">Tipo de firma:</label>
+    <select id="tipoFirma" required>
+      <option value="" selected>-- Seleccione tipo de firma --</option>
+      <option value="web">Firma Web Moderna</option>
+      <option value="compatible">Firma Compatible Gmail/Outlook</option>
+    </select>
+
+    <input type="hidden" id="logo" value="https://i.imgur.com/twnm3uh.gif" />
+
+    <button type="button" onclick="generarFirmaSegunTipo()">Generar firma</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Vista previa:</h2>
+  <div id="vistaPrevia">No hay firma generada aún.</div>
+
+  <h2>HTML para copiar:</h2>
+  <textarea id="firmaHTML" readonly placeholder="Aquí aparecerá el código HTML de la firma generada."></textarea>
+
+  <div class="clearfix" style="margin-top: 10px;">
+    <button class="clear-button" onclick="borrarTodo()">🗑 Borrar todo</button>
+    <button class="copy-button" onclick="copiarFirmaConFormato()">📋 Copiar firma</button>
+  </div>
+</div>
+
+<footer>
+  <p>
+    <img src="https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg" alt="Bandera de Alemania" />
+    Colegio Alemán Nicaragüense - Deutsche Schule Managua
+  </p>
+  <p>
+    🌐 <a href="https://www.dsm.edu.ni" target="_blank" rel="noopener noreferrer">www.dsm.edu.ni</a> | © 2025 - Developed by <strong>Eyner López</strong>
+  </p>
+</footer>
+
+<script>
+  // Validar y marcar inputs con contenido
+  const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], select');
+
+  inputs.forEach(input => {
+    input.addEventListener('input', () => toggleContenido(input));
+    toggleContenido(input);
+  });
+
+  function toggleContenido(el) {
+    if (el.value.trim() !== "") {
+      el.classList.add("contenido");
+    } else {
+      el.classList.remove("contenido");
+    }
+  }
+
+  // Celular solo números max 8
+  document.getElementById('celular').addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 8);
+    toggleContenido(this);
+  });
+
+  // Extensión solo números positivos
+  document.getElementById('extension').addEventListener('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+    toggleContenido(this);
+  });
+
+  // Funciones para agregar y quitar cargos
+function agregarCargo() {
+  const container = document.getElementById('cargosContainer');
+  const nuevo = document.createElement('div');
+  nuevo.className = 'cargo-pair';
+  nuevo.style = 'display: flex; gap: 10px; margin-top: 10px; align-items: flex-start;';
+  nuevo.innerHTML = `
+    <div style="flex: 1;">
+      <label>Cargo (Español)</label>
+      <input type="text" name="cargoEs[]" placeholder="Ej: Responsable de Infraestructura TI" />
+    </div>
+    <div style="flex: 1;">
+      <label>Cargo (Alemán) <small>(opcional)</small></label>
+      <input type="text" name="cargoDe[]" placeholder="Ej: Verantwortlicher für IT-Infrastruktur" />
+    </div>
+    <button type="button" class="btn-remove" onclick="removerCargo(this)">−</button>
+  `;
+  container.appendChild(nuevo);
+  
+  // Aquí seleccionamos los inputs recién creados y les agregamos el evento input
+  const inputsNuevos = nuevo.querySelectorAll('input[type="text"]');
+  inputsNuevos.forEach(input => {
+    input.addEventListener('input', () => toggleContenido(input));
+    toggleContenido(input);
+  });
+
+  actualizarBotonesEliminar();
+}
+
+
+  function removerCargo(btn) {
+    const container = document.getElementById('cargosContainer');
+    if (container.children.length > 1) {
+      btn.parentElement.remove();
+    } else {
+      alert('Debe existir al menos un par de cargos.');
+    }
+    actualizarBotonesEliminar();
+  }
+
+  function actualizarBotonesEliminar() {
+    const container = document.getElementById('cargosContainer');
+    const botones = container.querySelectorAll('.btn-remove');
+    botones.forEach(btn => btn.style.display = container.children.length > 1 ? 'inline-block' : 'none');
+  }
+
+  // Funciones para agregar y quitar correos
+  function agregarCorreo() {
+  const container = document.getElementById('correosContainer');
+  const nuevo = document.createElement('div');
+  nuevo.className = 'correo-item';
+  nuevo.style = 'display: flex; gap: 10px; margin-top: 10px; align-items: center;';
+  nuevo.innerHTML = `
+    <input type="email" name="correo[]" placeholder="ejemplo@dsm.edu.ni" required />
+    <button type="button" class="btn-remove" onclick="removerCorreo(this)">−</button>
+  `;
+  container.appendChild(nuevo);
+
+  // Agregar evento input para el nuevo input de correo
+  const inputCorreoNuevo = nuevo.querySelector('input[type="email"]');
+  inputCorreoNuevo.addEventListener('input', () => toggleContenido(inputCorreoNuevo));
+  toggleContenido(inputCorreoNuevo);
+
+  actualizarBotonesEliminarCorreos();
+}
+
+  function removerCorreo(btn) {
+    const container = document.getElementById('correosContainer');
+    if (container.children.length > 1) {
+      btn.parentElement.remove();
+    } else {
+      alert('Debe existir al menos un correo.');
+    }
+    actualizarBotonesEliminarCorreos();
+  }
+
+  function actualizarBotonesEliminarCorreos() {
+    const container = document.getElementById('correosContainer');
+    const botones = container.querySelectorAll('.btn-remove');
+    botones.forEach(btn => btn.style.display = container.children.length > 1 ? 'inline-block' : 'none');
+  }
+
+  // Validar correo con regex simple
+  function validarCorreo(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  // Validar celular 8 dígitos o vacío
+  function validarCelular(cel) {
+    return cel === '' || (/^\d{8}$/.test(cel));
+  }
+
+  // Generar firma Web Moderna
+  function generarFirma() {
+    const nombre = document.getElementById("nombre").value.trim();
+
+    const cargosEs = Array.from(document.querySelectorAll('input[name="cargoEs[]"]'))
+      .map(i => i.value.trim())
+      .filter(v => v !== '');
+
+    const cargosDe = Array.from(document.querySelectorAll('input[name="cargoDe[]"]'))
+      .map(i => i.value.trim());
+
+    const cargosConcatenados = cargosEs.map((cEs, i) => {
+      const cDe = cargosDe[i] || '';
+      return cDe ? `${cEs} / ${cDe}` : cEs;
+    }).join('<br>');
+
+    const correos = Array.from(document.querySelectorAll('input[name="correo[]"]'))
+      .map(i => i.value.trim())
+      .filter(v => v !== '');
+
+    if (correos.length === 0) {
+      alert("Por favor, ingrese al menos un correo electrónico.");
+      return false;
+    }
+
+    for(let c of correos) {
+      if (!validarCorreo(c)) {
+        alert(`Correo inválido: ${c}`);
+        return false;
+      }
+    }
+
+    const extension = document.getElementById("extension").value.trim();
+    const celular = document.getElementById("celular").value.trim();
+
+    if (!validarCelular(celular)) {
+      alert("Si ingresa celular, debe contener exactamente 8 números.");
+      return false;
+    }
+
+    const logo = document.getElementById("logo").value;
+
+    let telefonoLinea = `<strong>Tel.:</strong> 📞 505 2298-1000`;
+    if (extension) {
+      telefonoLinea += ` <strong>Ext.</strong> ${extension}`;
+    }
+    telefonoLinea += `<br>`;
+	
+const celularRaw = document.getElementById("celular").value.trim();
+const celularFormateado = celularRaw.length === 8 
+  ? celularRaw.slice(0,4) + ' ' + celularRaw.slice(4) 
+  : celularRaw;
+
+if (celularRaw) {
+  telefonoLinea += `<strong>Cel.:</strong> 📱 
+    <a href="https://wa.me/505${celularRaw}" target="_blank" style="color: #006699; text-decoration: none; display: inline-flex; align-items: center;">
+      ${celularFormateado}
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="16" height="16" style="margin-left: 6px;">
+    </a><br>`;
+}
+
+
+
+const correosHtml = correos
+  .map(c => `<div style="margin: 0;">📧 <a href="mailto:${c}">${c}</a></div>`)
+  .join('');
+    const firmaWeb = `
+      <div class="firma-container">
+        <strong class="nombre">${nombre}</strong><br>
+        ${cargosConcatenados ? cargosConcatenados + '<br>' : ''}
+        <a href="https://www.dsm.edu.ni" target="_blank" rel="noopener noreferrer">
+          <img src="${logo}" alt="Logo DSM" style="width:600px; max-width:100%; height:auto; display:block; margin: 4px 0 0 0;" />
+        </a>
+		 <strong class="institucion">Colegio Alemán Nicaragüense / Deutsche Schule Managua</strong>
+		 <br>
+        ${telefonoLinea}
+ <strong style="display: inline-block; width: 50px; vertical-align: top;">Email:</strong>
+<div style="display: inline-block; vertical-align: top; margin-left: 0;">
+  ${correosHtml}
+</div>
+
+
+  </div>
+  <br>
+        <p style="color:#009900; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.2em; margin: 0;">
+          Antes de imprimir este mensaje, piense en su responsabilidad con el medio ambiente / Bitte denken Sie über Ihre Verantwortung gegenüber der Umwelt nach, bevor Sie diese Email ausdrucken.
+        </p>
+      </div>
+    `;
+
+    document.getElementById("vistaPrevia").innerHTML = firmaWeb.trim();
+    document.getElementById("firmaHTML").value = firmaWeb.trim();
+    return true;
+  }
+
+  // Generar firma Compatible Gmail/Outlook
+  function generarFirmaCompatible() {
+    const nombre = document.getElementById("nombre").value.trim();
+
+    const cargosEs = Array.from(document.querySelectorAll('input[name="cargoEs[]"]'))
+      .map(i => i.value.trim())
+      .filter(v => v !== '');
+
+    const cargosDe = Array.from(document.querySelectorAll('input[name="cargoDe[]"]'))
+      .map(i => i.value.trim());
+
+    const cargosConcatenados = cargosEs.map((cEs, i) => {
+      const cDe = cargosDe[i] || '';
+      return cDe ? `${cEs} / ${cDe}` : cEs;
+    }).join('<br>');
+
+    const correos = Array.from(document.querySelectorAll('input[name="correo[]"]'))
+      .map(i => i.value.trim())
+      .filter(v => v !== '');
+
+    if (correos.length === 0) {
+      alert("Por favor, ingrese al menos un correo electrónico.");
+      return false;
+    }
+
+    for(let c of correos) {
+      if (!validarCorreo(c)) {
+        alert(`Correo inválido: ${c}`);
+        return false;
+      }
+    }
+
+    const extension = document.getElementById("extension").value.trim();
+    const celular = document.getElementById("celular").value.trim();
+
+    if (!validarCelular(celular)) {
+      alert("Si ingresa celular, debe contener exactamente 8 números.");
+      return false;
+    }
+
+    const logo = document.getElementById("logo").value;
+
+    let telefonoLinea = `<div><strong>Tel.:</strong>   +505 2298-1000`;
+if (extension) {
+  telefonoLinea += ` Ext. ${extension}`;
+}
+telefonoLinea += `</div>`;
+
+if (celular) {
+  const celularFormateado = celular.length === 8 
+    ? celular.slice(0,4) + ' ' + celular.slice(4) 
+    : celular;
+
+  telefonoLinea += `<div><strong>Cel.: </strong> +505 <a href="https://wa.me/505${celular}" target="_blank" style="color: #006699; text-decoration: none;">${celularFormateado}</a></div>`;
+}
+
+    const correosHtml = correos.join('<br>');
+	
+    const firmaCompatible = `
+     <div style="font-family: Arial, sans-serif; font-size: 13px; color: #000000; line-height: 1.4;">
+    <strong style="font-size: 15px; color:var(--color-principal); font-weight: bold;">${nombre}</strong><br>
+</div>
+    ${cargosConcatenados ? cargosConcatenados + '<br>' : ''}
+    <a href="https://www.dsm.edu.ni" target="_blank" rel="noopener noreferrer">
+      <img src="${logo}" alt="Logo DSM" style="width:600px; max-width:100%; height:auto; display:block; margin: 4px 0 0 0;" />
+    </a>
+	<strong>  Colegio Alemán Nicaragüense / Deutsche Schule Managua </strong> 
+	<br><br>
+    ${telefonoLinea}
+<strong style="display: inline-block; width: 50px; vertical-align: top;">Email:</strong>
+<div style="display: inline-block; vertical-align: top; margin-left: 0;">
+  ${correosHtml}
+</div>
+</div>
+  <br><br>
+    <p style="color:#009900; font-family: Arial, Helvetica, sans-serif; font-size:10pt; line-height:1.2em; margin: 0;">
+      Antes de imprimir este mensaje, piense en su responsabilidad con el medio ambiente / Bitte denken Sie über Ihre Verantwortung gegenüber der Umwelt nach, bevor Sie diese Email ausdrucken.
+    </p>
+  </div>
+`;
+
+
+    document.getElementById("vistaPrevia").innerHTML = firmaCompatible.trim();
+    document.getElementById("firmaHTML").value = firmaCompatible.trim();
+    return true;
+  }
+
+  // Función para decidir qué firma generar
+  function generarFirmaSegunTipo() {
+  const tipo = document.getElementById("tipoFirma").value;
+  if (!tipo) {
+    alert("Por favor, seleccione un tipo de firma.");
+    return false;
+  }
+  let exito = false;
+  if (tipo === "web") exito = generarFirma();
+  if (tipo === "compatible") exito = generarFirmaCompatible();
+  if (exito) {
+    alert("Firma generada correctamente.");
+  }
+  return exito;
+}
+
+  // Copiar firma al portapapeles con formato
+function copiarFirmaConFormato() {
+  const vistaPrevia = document.getElementById("vistaPrevia");
+  const htmlContent = vistaPrevia.innerHTML.trim();
+
+  // Verificar que la vista previa tenga contenido distinto a vacío
+  if (!htmlContent || htmlContent.includes("No hay firma")) {
+    alert("No hay firma generada para copiar.");
+    return;
+  }
+
+  try {
+    // Crear el blob con HTML para copiar con formato
+    const blobInput = new Blob([htmlContent], { type: "text/html" });
+    const data = [new ClipboardItem({ "text/html": blobInput })];
+
+    navigator.clipboard.write(data).then(() => {
+      alert("Firma copiada con formato correctamente ✅");
+    });
+  } catch (err) {
+    console.error("Error al copiar:", err);
+    alert("Error al copiar la firma con formato: " + err);
+  }
+}
+
+
+
+
+  // Borrar todos los inputs y resultados
+  function borrarTodo() {
+  // Verificar si hay datos en inputs o firma generada
+  const nombre = document.getElementById("nombre").value.trim();
+  const cargosEs = Array.from(document.querySelectorAll('input[name="cargoEs[]"]')).some(i => i.value.trim() !== "");
+  const cargosDe = Array.from(document.querySelectorAll('input[name="cargoDe[]"]')).some(i => i.value.trim() !== "");
+  const correos = Array.from(document.querySelectorAll('input[name="correo[]"]')).some(i => i.value.trim() !== "");
+  const extension = document.getElementById("extension").value.trim();
+  const celular = document.getElementById("celular").value.trim();
+  const firmaHTML = document.getElementById("firmaHTML").value.trim();
+
+  if (
+    !nombre && !cargosEs && !cargosDe && !correos &&
+    !extension && !celular && !firmaHTML
+  ) {
+    alert("No hay nada que borrar.");
+    return;
+  }
+
+  if (!confirm("¿Desea borrar todos los datos y la firma generada?")) return;
+
+  // Si confirmó, borrar todo
+  document.getElementById("firmaForm").reset();
+  document.getElementById("vistaPrevia").innerHTML = "No hay firma generada aún.";
+  document.getElementById("firmaHTML").value = "";
+  actualizarBotonesEliminar();
+  actualizarBotonesEliminarCorreos();
+  inputs.forEach(i => i.classList.remove("contenido"));
+}
+
+
+</script>
+
+</body>
+</html>
